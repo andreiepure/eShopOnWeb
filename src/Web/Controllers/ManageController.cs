@@ -164,6 +164,7 @@ public class ManageController : Controller
         var user = await _userManager.GetUserAsync(User);
         if (user == null)
         {
+            _logger.LogInformation("Could not log in user " + user.Email);
             throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
         }
 

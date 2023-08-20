@@ -20,6 +20,10 @@
     <PackageReference Include="xunit.runner.visualstudio" />     
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <DotNetCliToolReference Include="dotnet-xunit" />
+    <PackageReference Include="altcover">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

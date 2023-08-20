@@ -13,7 +13,11 @@
     <PackageReference Include="Moq" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />      
-    <PackageReference Include="xunit.runner.console" />     
+    <PackageReference Include="xunit.runner.console" />
+    <PackageReference Include="altcover">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>   
   </ItemGroup>
 
   <ItemGroup>

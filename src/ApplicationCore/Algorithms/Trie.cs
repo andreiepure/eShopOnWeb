@@ -155,7 +155,7 @@ public class Trie : IEnumerable<String>
         for (int i = 0; i < prefix.Length; ++i)
         {
             if (!current.Children.ContainsKey(prefix[i]))
-                return null;
+                return Enumerable.Empty<string>();
 
             current = current.Children[prefix[i]];
         }

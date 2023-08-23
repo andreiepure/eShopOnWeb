@@ -50,7 +50,7 @@ public class BasketViewModelService : IBasketViewModelService
         };
     }
 
-    private async Task<List<BasketItemViewModel>> GetBasketItems(IReadOnlyCollection<BasketItem> basketItems)
+    private async Task<List<BasketItemViewModel>> GetBasketItems(IList<BasketItem> basketItems)
     {
         var catalogItemsSpecification = new CatalogItemsSpecification(basketItems.Select(b => b.CatalogItemId).ToArray());
         var catalogItems = await _itemRepository.ListAsync(catalogItemsSpecification);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using Ardalis.Result;
@@ -63,11 +64,11 @@ public class BasketService : IBasketService
         return basket;
     }
 
-    public async Task TransferBasketAsync(string anonymousId, string userName)
+    public async Task TransferBasketAsync(string anonymousId, string userName, bool shouldBeEmpty = false)
     {
         var anonymousBasketSpec = new BasketWithItemsSpecification(anonymousId);
         var anonymousBasket = await _basketRepository.FirstOrDefaultAsync(anonymousBasketSpec);
-        if (anonymousBasket == null) return;
+        if (anonymousBasket == null || shouldBeEmpty) return;
         var userBasketSpec = new BasketWithItemsSpecification(userName);
         var userBasket = await _basketRepository.FirstOrDefaultAsync(userBasketSpec);
         if (userBasket == null)
@@ -75,11 +76,45 @@ public class BasketService : IBasketService
             userBasket = new Basket(userName);
             await _basketRepository.AddAsync(userBasket);
         }
+        BucketSortAscending(anonymousBasket.Items);
         foreach (var item in anonymousBasket.Items)
         {
             userBasket.AddItem(item.CatalogItemId, item.UnitPrice, item.Quantity);
         }
         await _basketRepository.UpdateAsync(userBasket);
         await _basketRepository.DeleteAsync(anonymousBasket);
+    }
+
+
+    private static void BucketSortAscending(IList<BasketItem> collection)
+    {
+        var ids = collection.Select(x => x.Id);
+        int maxValue = ids.Max();
+        int minValue = ids.Min();
+
+        List<int>[] bucket = new List<int>[maxValue - minValue + 1];
+
+        for (int i = 0; i < bucket.Length; i++)
+        {
+            bucket[i] = new List<int>();
+        }
+
+        foreach (int i in ids)
+        {
+            bucket[i - minValue].Add(i);
+        }
+
+        int k = 0;
+        foreach (List<int> i in bucket)
+        {
+            if (i.Count > 0)
+            {
+                foreach (int j in i)
+                {
+                    collection[k] = collection.First(x => x.Id == j);
+                    k++;
+                }
+            }
+        }
     }
 }

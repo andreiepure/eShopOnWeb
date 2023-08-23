@@ -2,8 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Web.Features.MyOrders;
 using Microsoft.eShopWeb.Web.Features.OrderDetails;
+using Microsoft.eShopWeb.Web.ViewModels;
 
 namespace Microsoft.eShopWeb.Web.Controllers;
 
@@ -13,10 +15,12 @@ namespace Microsoft.eShopWeb.Web.Controllers;
 public class OrderController : Controller
 {
     private readonly IMediator _mediator;
+    private CatPhotoService CatPhotoService;
 
     public OrderController(IMediator mediator)
     {
         _mediator = mediator;
+        CatPhotoService = new CatPhotoService();
     }
 
     [HttpGet]
@@ -40,5 +44,13 @@ public class OrderController : Controller
         }
 
         return View(viewModel);
+    }
+
+    [HttpGet("{catName}")]
+    public async Task<IActionResult> HasCat(string catName)
+    {
+        var hasCat = CatPhotoService.HasCat(catName);
+        var model = new CatViewModel(catName);
+        return View(model);
     }
 }
